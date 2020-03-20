@@ -10,8 +10,19 @@
           <div class="container-right">
             <div class="container-center">
               <dv-border-box-10 class="center-item">
-                <dv-capsule-chart class="lc1-chart"
-                                  :config="config" />
+                <div class="center-item-box">
+                  <div class="center-item-left">
+                    <dv-decoration-11 class="title">仓库Stars详情</dv-decoration-11>
+                  </div>
+                  <dv-decoration-2 :reverse="true"
+                                   style="width:5px;height:380px;" />
+                  <div class="center-item-right">
+                    <dv-decoration-11 class="title">仓库语言分类</dv-decoration-11>
+                    <ve-funnel :data="chartData"
+                               :settings="chartSettings"></ve-funnel>
+
+                  </div>
+                </div>
               </dv-border-box-10>
               <div style="overflow: hidden;">
                 <dv-border-box-3 class="info">
@@ -29,8 +40,19 @@
                 </dv-border-box-3>
                 <dv-border-box-3 class="classification">
                   <div class="border-box-content">
-                    <ve-funnel :data="chartData"
-                               :settings="chartSettings"></ve-funnel>
+                    <div class="fans-wrap">
+                      <dv-decoration-7 class="moer">粉丝</dv-decoration-7>
+                      <ul>
+                        <li v-for="(item,index) in fans.slice(0,9)"
+                            :key="index">
+                          <img :src="item.avatar_url"
+                               alt="">
+                          <span>{{item.login}}</span>
+                        </li>
+                      </ul>
+                      <dv-decoration-11 class="moer">点击查看更</dv-decoration-11>
+                    </div>
+
                   </div>
                 </dv-border-box-3>
               </div>
@@ -54,23 +76,20 @@ export default {
     };
     return {
       userName: "",
+      fans: [], //获取粉丝量
       dataObj: {},
       chartData: {
         columns: ["lang", "number"],
         rows: []
       },
       config: {
-        data: [],
-        unit: '件'
+        data: []
       }
     };
   },
   components: {
     Header,
     HomeLeft
-  },
-  watch: {
-
   },
   methods: {
     getUserInfo () {
@@ -93,8 +112,6 @@ export default {
             })
           }
         }
-        console.log(typeof this.config)
-
         // 梳理语言，计算语言类型和各个语言的数量
         let languages = {};
         for (var i = 0; i < data.length; i++) {
@@ -113,7 +130,16 @@ export default {
         }
         this.chartData.rows = dataL;
         this.chartSettings.sequence = keyTitle
-
+      })
+    },
+    getFans () {
+      // 获取粉丝
+      this.$axios.get(`https://api.github.com/users/${this.userName}/followers`).then((res) => {
+        let { data } = res
+        console.log(data)
+        if (data.length > 0) {
+          this.fans = data
+        }
       })
     }
   },
@@ -123,7 +149,7 @@ export default {
   created () {
     this.userName = this.$route.query.user;
     this.getUserInfo();
-
+    this.getFans()
   }
 };
 </script>
@@ -155,9 +181,28 @@ export default {
           width: 100%;
           .center-item {
             width: 800px;
-            height: 400px;
-            .ve-pie {
-              width: 100% !important;
+            height: 450px;
+            .center-item-box {
+              width: 100%;
+              height: 100%;
+              display: flex;
+              flex-direction: row;
+              justify-content: space-around;
+              .center-item-left {
+                width: 400px;
+              }
+              .center-item-right {
+                width: 400px;
+              }
+              .title {
+                color: #25f3e6;
+                font-weight: 700;
+                font-size: 20px;
+                width: 200px;
+                height: 60px;
+                display: block;
+                margin: 0 auto;
+              }
             }
           }
           .info {
@@ -214,9 +259,38 @@ export default {
             height: 460px;
             margin-top: 20px;
             margin-left: 20px;
-            .ve-funnel {
-              width: 100% !important;
+            .fans-wrap {
+              width: 100%;
               display: block;
+              ul {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                li {
+                  width: 30%;
+                  margin-bottom: 10px;
+                  img {
+                    width: 50px;
+                    height: 50px;
+                    border-radius: 50%;
+                    display: block;
+                    margin: 0 auto;
+                  }
+                  span {
+                    color: #fff;
+                    text-align: center;
+                    display: block;
+                  }
+                }
+              }
+            }
+            .moer {
+              width: 200px;
+              height: 60px;
+              margin: 0 auto;
+              color: #25f3e6;
+              cursor: pointer;
             }
           }
         }

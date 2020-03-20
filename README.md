@@ -1,24 +1,8 @@
 # vue-echarts-datav
 
-## Project setup
-```
-yarn install
-```
+### 请求接口介绍
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
-
-### Compiles and minifies for production
-```
-yarn build
-```
-
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+- 请求个人信息接口 `https://api.github.com/users/用户名`
+- 请求粉丝接口 `https://api.github.com/users/用户名/followers`
+- 仓库信息 `https://api.github.com/users/用户名/repos`
+  - 这个接口里面包含个人仓库所有信息
