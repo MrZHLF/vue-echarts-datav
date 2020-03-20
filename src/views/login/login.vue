@@ -1,34 +1,30 @@
 <template>
   <div class="login-wrap">
-    <vue-particles
-      color="#dedede"
-      :particleOpacity="0.7"
-      :particlesNumber="80"
-      shapeType="circle"
-      :particleSize="4"
-      linesColor="#dedede"
-      :linesWidth="1"
-      :lineLinked="true"
-      :lineOpacity="0.4"
-      :linesDistance="150"
-      :moveSpeed="3"
-      :hoverEffect="true"
-      hoverMode="grab"
-      :clickEffect="true"
-      clickMode="push"
-    >
+    <vue-particles color="#dedede"
+                   :particleOpacity="0.7"
+                   :particlesNumber="80"
+                   shapeType="circle"
+                   :particleSize="4"
+                   linesColor="#dedede"
+                   :linesWidth="1"
+                   :lineLinked="true"
+                   :lineOpacity="0.4"
+                   :linesDistance="150"
+                   :moveSpeed="3"
+                   :hoverEffect="true"
+                   hoverMode="grab"
+                   :clickEffect="true"
+                   clickMode="push">
     </vue-particles>
     <div class="login">
       <div class="login-center">
         <p>使用Vue构建 <b>Github</b> 可视化大数据平台</p>
         <div class="form-section">
           <div class="form-item">
-            <input
-              class="item-input"
-              type="text"
-              v-model="userName"
-              placeholder="输入您的github账号"
-            />
+            <input class="item-input"
+                   type="text"
+                   v-model="userName"
+                   placeholder="输入您的github账号" />
           </div>
           <div class="form-item">
             <button @click="login">登录</button>
@@ -41,13 +37,13 @@
 <script>
 export default {
   name: "Login",
-  data() {
+  data () {
     return {
       userName: ""
     };
   },
   methods: {
-    login() {
+    login () {
       if (this.userName === "") {
         alert("不能为空");
       }
@@ -56,7 +52,7 @@ export default {
         .then(res => {
           const { data } = res;
           console.log(data);
-          localStorage.setItem("userkey", data.login);
+          sessionStorage.setItem("userkey", data.login);
           this.$router.push({
             name: "Home",
             query: { user: data.login }

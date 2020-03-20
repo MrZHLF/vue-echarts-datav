@@ -18,7 +18,7 @@ const router = new Routerr({
 
 // 路由守卫
 router.beforeEach((to, from, next) => {
-  const isLogin = !!localStorage.userkey
+  const isLogin = !!sessionStorage.userkey
 
   if (to.path === '/login') {
     next()

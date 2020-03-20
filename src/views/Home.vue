@@ -9,17 +9,16 @@
           </div>
           <div class="container-right">
             <div class="container-center">
-              <dv-border-box-10 class="center-item"
-                >dv-border-box-10</dv-border-box-10
-              >
+              <dv-border-box-10 class="center-item">
+                <dv-capsule-chart class="lc1-chart"
+                                  :config="config" />
+              </dv-border-box-10>
               <div style="overflow: hidden;">
                 <dv-border-box-3 class="info">
                   <div class="info-wrap border-box-content">
                     <div class="info-left">
-                      <img
-                        src="https://avatars2.githubusercontent.com/u/32163286?v=4"
-                        alt=""
-                      />
+                      <img src="https://avatars2.githubusercontent.com/u/32163286?v=4"
+                           alt="" />
                     </div>
                     <div class="info-right">
                       <h1>MrZHLF</h1>
@@ -30,10 +29,8 @@
                 </dv-border-box-3>
                 <dv-border-box-3 class="classification">
                   <div class="border-box-content">
-                    <ve-funnel
-                      :data="chartData"
-                      :settings="chartSettings"
-                    ></ve-funnel>
+                    <ve-funnel :data="chartData"
+                               :settings="chartSettings"></ve-funnel>
                   </div>
                 </dv-border-box-3>
               </div>
@@ -51,21 +48,20 @@ import Header from "./../components/app-header/Header";
 import HomeLeft from "./center/HomeLeft";
 export default {
   name: "Home",
-  data() {
+  data () {
     this.chartSettings = {
-      sequence: ["Vue", "Java", "JavaScript", "HTML"]
+      sequence: []
     };
     return {
       userName: "",
       dataObj: {},
       chartData: {
-        columns: ["状态", "数值"],
-        rows: [
-          { 状态: "Vue", 数值: 900 },
-          { 状态: "Java", 数值: 600 },
-          { 状态: "JavaScript", 数值: 300 },
-          { 状态: "HTML", 数值: 100 }
-        ]
+        columns: ["lang", "number"],
+        rows: []
+      },
+      config: {
+        data: [],
+        unit: '件'
       }
     };
   },
@@ -73,20 +69,61 @@ export default {
     Header,
     HomeLeft
   },
+  watch: {
+
+  },
   methods: {
-    getUserInfo() {
+    getUserInfo () {
       this.$axios
         .get(`https://api.github.com/users/${this.userName}`)
         .then(res => {
           const { data } = res;
-          console.log(data);
           this.dataObj = data;
         });
+    },
+    getStats () {
+      this.$axios.get(`https://api.github.com/users/${this.userName}/repos`).then((res) => {
+        let data = res.data;
+        // 仓库和仓库star 只有star大于0的时候展示
+        for (var i = 0; i < data.length; i++) {
+          if (data[i].stargazers_count > 0) {
+            this.config.data.push({
+              name: data[i].name,
+              value: data[i].stargazers_count
+            })
+          }
+        }
+        console.log(typeof this.config)
+
+        // 梳理语言，计算语言类型和各个语言的数量
+        let languages = {};
+        for (var i = 0; i < data.length; i++) {
+          let langData = data[i].language;
+          if (langData in languages) {
+            languages[langData]++;
+          } else {
+            languages[langData] = 1;
+          }
+        }
+        let dataL = [];
+        let keyTitle = []
+        for (const key in languages) {
+          keyTitle.push(key)
+          dataL.push({ lang: key, number: languages[key] });
+        }
+        this.chartData.rows = dataL;
+        this.chartSettings.sequence = keyTitle
+
+      })
     }
   },
-  created() {
+  mounted () {
+    this.getStats()
+  },
+  created () {
     this.userName = this.$route.query.user;
     this.getUserInfo();
+
   }
 };
 </script>
@@ -119,6 +156,9 @@ export default {
           .center-item {
             width: 800px;
             height: 400px;
+            .ve-pie {
+              width: 100% !important;
+            }
           }
           .info {
             width: 400px;
