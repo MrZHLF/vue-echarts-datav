@@ -21,9 +21,10 @@ export default {
         let dataAry = [];
         if (data) {
           for (let i = 0; i < data.length; i++) {
+            let date = data[i].created_at.split('T')[0]
             if (data[i].payload.commits) {
               data[i].payload.commits.forEach(ele => {
-                dataAry.push([data[i].created_at, data[i].type, data[i].repo.name, ele.message])
+                dataAry.push([date, data[i].type, data[i].repo.name, ele.message])
               })
             }
           }

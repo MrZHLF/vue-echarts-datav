@@ -6,7 +6,7 @@
               :extend="extend"></ve-bar>
     </div>
     <dv-decoration-2 :reverse="true"
-                     style="width:5px;height:380px;" />
+                     style="width:5px;height:400px;" />
     <div class="center-item-right">
       <dv-decoration-11 class="title">仓库语言分类</dv-decoration-11>
       <ve-funnel :data="chartData"
@@ -69,6 +69,8 @@ export default {
     getStats () {
       this.$axios.get(`https://api.github.com/users/${this.userName}/repos`).then((res) => {
         let data = res.data;
+        console.log(data);
+
         // 仓库和仓库star 只有star大于0的时候展示
         for (var i = 0; i < data.length; i++) {
           if (data[i].stargazers_count > 0) {

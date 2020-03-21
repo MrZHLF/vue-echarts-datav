@@ -21,37 +21,74 @@
         <p>使用Vue构建 <b>Github</b> 可视化大数据平台</p>
         <div class="form-section">
           <div class="form-item">
-            <input class="item-input"
+            <input placeholder="输入您的github账号"
+                   class="item-input"
                    type="text"
-                   v-model="userName"
-                   placeholder="输入您的github账号" />
+                   @focus="onFocus"
+                   :class="[isShow ? 'active' : '']"
+                   v-model="userName" />
+            <p class="tip"
+               v-if="isShow">{{tip}}</p>
           </div>
           <div class="form-item">
-            <button @click="login">登录</button>
+            <button @click="open">登录</button>
           </div>
         </div>
+        <Message @onClose="onClose"
+                 :isConfirm="isConfirm"
+                 @onLogin="onLogin" />
       </div>
     </div>
   </div>
 </template>
 <script>
+import Message from './../../components//message/Message'
 export default {
   name: "Login",
   data () {
     return {
-      userName: ""
+      userName: "",
+      tip: "*不能为空",
+      isShow: false,
+      isConfirm: false
     };
   },
-  methods: {
-    login () {
-      if (this.userName === "") {
-        alert("不能为空");
+  components: {
+    Message
+  },
+  watch: {
+    userName (value) {
+      if (value == '') {
+        this.isShow = true
+      } else {
+        this.isShow = false
       }
+
+    }
+  },
+  methods: {
+    onFocus (e) {
+      if (e.target.value == '') {
+        this.isShow = true
+      } else {
+        this.isShow = false
+      }
+    },
+    open () {
+      if (this.userName === "") {
+        this.isShow = true
+        return
+      }
+      this.isConfirm = true
+    },
+    onClose () {
+      this.isConfirm = false
+    },
+    onLogin () {
       this.$axios
         .get(`https://api.github.com/users/${this.userName}`)
         .then(res => {
           const { data } = res;
-          console.log(data);
           sessionStorage.setItem("userkey", data.login);
           localStorage.setItem("userkey", data.login);
           this.$router.push({
@@ -101,13 +138,30 @@ export default {
           .item-input {
             width: 100%;
             height: 40px;
-            background: none;
-            border: 1px solid #ffffff;
-            border-radius: 10px;
-            color: white;
             outline: none;
-            font-size: 18px;
+            color: white;
+            font-size: 15px;
+            background: none;
             padding-left: 10px;
+            border-radius: 10px;
+            border: 1px solid #ffffff;
+          }
+          input::-webkit-input-placeholder {
+            color: white;
+          }
+          input::-moz-input-placeholder {
+            color: white;
+          }
+          input::-ms-input-placeholder {
+            color: white;
+          }
+          .active {
+            border: 1px solid red;
+          }
+          .tip {
+            font-size: 15px;
+            padding-top: 5px;
+            color: red;
           }
           button {
             width: 70%;

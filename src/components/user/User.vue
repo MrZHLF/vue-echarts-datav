@@ -10,6 +10,7 @@
       <p v-if="dataObj.created_at">{{dataObj.created_at | formatDate}}</p>
       <p v-else>暂无</p>
       <span>加入github</span>
+      <p>{{dataObj.location}}</p>
     </div>
   </div>
 </template>
@@ -29,7 +30,7 @@ export default {
     }
   },
   created () {
-    console.log(this.dataObj)
+    console.log(this.dataObj, 'ppp')
   }
 }
 </script>
