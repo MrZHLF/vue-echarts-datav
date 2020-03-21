@@ -4,27 +4,30 @@
       <div class="box-item">
         <p class="item">公开仓库数</p>
         <dv-decoration-9 style="width:150px;height:150px;color:#fff">
-          <p>
-            60
+          <p v-if="dataObj.public_repos>0">
+            {{dataObj.public_repos}}
           </p>
+          <p v-else>无</p>
         </dv-decoration-9>
       </div>
       <dv-decoration-2 style="height:5px;display: block;" />
       <div class="box-item">
         <p class="item">粉丝</p>
         <dv-decoration-9 style="width:150px;height:150px;color:#fff">
-          <p>
-            60
+          <p v-if="dataObj.followers>0">
+            {{dataObj.followers}}
           </p>
+          <p v-else>无</p>
         </dv-decoration-9>
       </div>
       <dv-decoration-2 style="height:5px;display: block;" />
       <div class="box-item last-item">
         <p class="item">跟随</p>
         <dv-decoration-9 style="width:150px;height:150px;color:#fff">
-          <p>
-            60
+          <p v-if="dataObj.following>0">
+            {{dataObj.following}}
           </p>
+          <p v-else>无</p>
         </dv-decoration-9>
       </div>
     </div>
@@ -32,7 +35,19 @@
 </template>
 
 <script>
-export default {};
+export default {
+  props: {
+    dataObj: Object
+  },
+  data () {
+    return {
+
+    }
+  },
+  created () {
+    console.log(this.dataObj)
+  },
+};
 </script>
 
 <style scoped lang="scss">
