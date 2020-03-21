@@ -13,25 +13,34 @@
           </div>
           <div class="container-right">
             <div class="container-center">
-              <dv-border-box-10 class="center-item">
-                <Warehouse :dataObj="dataObj" />
-              </dv-border-box-10>
-              <div style="overflow: hidden;">
-                <dv-border-box-3 class="info">
-                  <User :dataObj="dataObj" />
-                </dv-border-box-3>
-                <dv-border-box-3 class="classification">
-                  <div class="border-box-content">
-                    <Fans :dataObj="dataObj" />
-                  </div>
-                </dv-border-box-3>
+              <div class="container-center-left">
+                <dv-border-box-10 class="center-item">
+                  <Warehouse :dataObj="dataObj" />
+                </dv-border-box-10>
+                <div class="tab-list">
+
+                  <Lately />
+                </div>
               </div>
+              <div class="container-center-right">
+                <div style="overflow: hidden;">
+                  <dv-border-box-3 class="info">
+                    <User :dataObj="dataObj" />
+                  </dv-border-box-3>
+                  <dv-border-box-3 class="classification">
+                    <div class="border-box-content">
+                      <Fans :dataObj="dataObj" />
+                    </div>
+                  </dv-border-box-3>
+                </div>
+              </div>
+
             </div>
-            <div class="container-list"></div>
           </div>
         </div>
       </dv-border-box-1>
     </div>
+
   </div>
 </template>
 
@@ -41,6 +50,7 @@ import HomeLeft from "./center/HomeLeft";
 import Fans from './../components/fans/Fans'
 import User from './../components/user/User'
 import Warehouse from './../components/warehouse/Warehouse'
+import Lately from './../components//lately/Lately'
 export default {
   name: "Home",
   data () {
@@ -56,7 +66,8 @@ export default {
     HomeLeft,
     Fans,
     User,
-    Warehouse
+    Warehouse,
+    Lately
   },
   methods: {
     getUserInfo () {
@@ -114,6 +125,17 @@ export default {
           display: flex;
           flex-direction: row;
           width: 100%;
+          .container-center-left {
+            width: 100%;
+            .tab-list {
+              width: 100%;
+              height: 230px;
+              margin-top: 10px;
+            }
+          }
+          .container-center-right {
+            flex: 1;
+          }
           .center-item {
             width: 800px;
             height: 450px;

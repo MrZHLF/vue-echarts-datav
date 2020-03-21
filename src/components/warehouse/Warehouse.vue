@@ -2,15 +2,16 @@
   <div class="center-item-box">
     <div class="center-item-left">
       <dv-decoration-11 class="title">仓库Stars详情</dv-decoration-11>
-      <!-- <ve-pie :data="chartDatas"></ve-pie> -->
-      <ve-bar :data="chartDatas"></ve-bar>
+      <ve-bar :data="chartDatas"
+              :extend="extend"></ve-bar>
     </div>
     <dv-decoration-2 :reverse="true"
                      style="width:5px;height:380px;" />
     <div class="center-item-right">
       <dv-decoration-11 class="title">仓库语言分类</dv-decoration-11>
       <ve-funnel :data="chartData"
-                 :settings="chartSettings"></ve-funnel>
+                 :settings="chartSettings"
+                 :extend="extend"></ve-funnel>
 
     </div>
   </div>
@@ -23,6 +24,32 @@ export default {
     dataObj: Object
   },
   data () {
+    this.extend = {
+      series: {
+        label: {
+          normal: {
+            show: true
+          }
+        }
+      },
+      legend: {
+        textStyle: { color: "#fff" }
+      },
+      yAxis: {
+        axisLabel: {
+          textStyle: {
+            color: "#fff"
+          }
+        }
+      },
+      xAxis: {
+        axisLabel: {
+          textStyle: {
+            color: "#fff"
+          }
+        }
+      }
+    };
     this.chartSettings = {
       sequence: []
     };
@@ -33,16 +60,14 @@ export default {
       },
       chartDatas: {
         columns: ['名称', 'star数量'],
-        rows: [],
-        label: {
-          color: '#fff'
-        }
-      }
+        rows: []
+      },
+      userName: ""
     }
   },
   methods: {
     getStats () {
-      this.$axios.get(`https://api.github.com/users/${this.dataObj.login}/repos`).then((res) => {
+      this.$axios.get(`https://api.github.com/users/${this.userName}/repos`).then((res) => {
         let data = res.data;
         // 仓库和仓库star 只有star大于0的时候展示
         for (var i = 0; i < data.length; i++) {
@@ -53,8 +78,6 @@ export default {
             })
           }
         }
-        console.log(this.chartDatas.row);
-
         // 梳理语言，计算语言类型和各个语言的数量
         let languages = {};
         for (var i = 0; i < data.length; i++) {
@@ -77,6 +100,12 @@ export default {
     }
   },
   created () {
+
+    if (localStorage.getItem('userkey')) {
+      this.userName = localStorage.getItem('userkey')
+    } else {
+      this.userName = this.dataObj.login
+    }
     this.getStats()
   }
 }

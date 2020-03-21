@@ -53,6 +53,7 @@ export default {
           const { data } = res;
           console.log(data);
           sessionStorage.setItem("userkey", data.login);
+          localStorage.setItem("userkey", data.login);
           this.$router.push({
             name: "Home",
             query: { user: data.login }
