@@ -62,4 +62,6 @@
 
 ### 成果展示
 
-![avatar](./public/11.png)
+![avatar](./public/1.png)
+![avatar](./public/2.png)
+![avatar](./public/66.gif)
